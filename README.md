@@ -1,5 +1,5 @@
-# az-py-cli
-Pythonic wrapper for az cli
+# az-py-cli-generator
+Generator for a Pythonic wrapper for az cli
 
 Requires Python 3
 
