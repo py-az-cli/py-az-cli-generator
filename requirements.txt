@@ -1,0 +1,4 @@
+PyYAML
+six
+knack
+az.cli
