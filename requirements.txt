@@ -1,4 +1,4 @@
-PyYAML # provides a YAML parser and emitter for Python
-six # provides compatibility between Python version 2 and 3
-knack # provides CLI framework for Python
-az.cli # provides capability to load Azure extensions
+PyYAML  # provides a YAML parser and emitter for Python
+six     # provides compatibility between Python version 2 and 3
+knack   # provides CLI framework for Python
+az.cli  # provides capability to load Azure extensions
