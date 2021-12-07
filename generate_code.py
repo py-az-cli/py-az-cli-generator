@@ -201,7 +201,9 @@ def generate_code(base_dir):
                     f.write(
 f"""
 def {command_verb}({arguments_formatted}):
-    '{short_summary}'
+    '''
+    {short_summary}
+    '''
     return call_az("az {command.name}", locals())
 
 """)
