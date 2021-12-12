@@ -124,6 +124,10 @@ def generate_code(base_dir):
                 required_args = []
                 optional_args = []
 
+                # string to collect the argument help
+                required_arg_help = ""
+                optional_arg_help = ""
+
                 # get the command object from the command table
                 command = commands[command_path][command_verb]
 
@@ -165,14 +169,15 @@ def generate_code(base_dir):
                         if not required:
                             output_arg = output_arg + "=None"
 
-                        # strip out these default cmd arguments which are not applicable
+                        # strip out private and default cmd arguments which are not applicable
                         # and add the output arguments to a list
-                        if output_arg not in ["__cmd__=None","cmd=None"]:
+                        if not output_arg.startswith("_") and output_arg not in ["__cmd__=None","cmd=None"]:
 
                             if required:
                                 required_args.append(output_arg)
                             else:
                                 optional_args.append(output_arg)
+                                
                 
                     #help = arg.type.settings.get('help','')
 
