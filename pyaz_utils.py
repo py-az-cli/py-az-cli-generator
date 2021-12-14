@@ -17,9 +17,11 @@ def call_az(command: str, parameters: Dict) -> object:
     `
     """
     params = _get_params(parameters)
-    full_command = f"{command} {params}"
-    print(full_command)
-    output = subprocess.run(full_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    commands = command.split()
+    commands.extend(params)
+    full_command = " ".join(commands)
+    print(f"Executing command: {full_command}")
+    output = subprocess.run(commands, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout = output.stdout.decode("utf-8")
     stderr = output.stderr.decode("utf-8")
     if stdout:
@@ -58,8 +60,9 @@ def _get_params(locals: Dict) -> str:
             
             # if value is a boolean then don't append value, just param, used for flags
             if type(locals[param]) == bool:
-                output.append(f"{_get_cli_name(param)}")
+                output.append(_get_cli_name(param))
             else:
-                output.append(f"{_get_cli_name(param)} '{locals[param]}'")    
+                output.append(_get_cli_name(param))
+                output.append(locals[param])    
     
-    return " ".join(output)
+    return output

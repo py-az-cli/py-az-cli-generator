@@ -192,6 +192,13 @@ def generate_code(base_dir):
                 else:
                     arguments_formatted = optional_args_formatted
 
+                #TODO: to make this work, modify _get_params method
+                #if len(arguments_formatted) > 0:
+                #    arguments_formatted += ", **kwargs"
+                #else:
+                #    arguments_formatted = "**kwargs"
+
+
                 # get help for commmand
                 help = tooling.get_help(command.name)
                 if help:
