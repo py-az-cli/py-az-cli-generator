@@ -23,15 +23,16 @@ def _call_az(command: str, parameters: Dict) -> object:
     # split commands into a list 
     commands = command.split()
     
-    # strip off az and replace it with full path to az to accomodate Windows
-    commands.pop(0)
-    commands.insert(0, shutil.which("az"))
-
     # add the params to the commands
     commands.extend(params)
 
     full_command = " ".join(commands)
     print(f"Executing command: {full_command}")
+    
+    # strip off az and replace it with full path to az to accomodate Windows
+    commands.pop(0)
+    commands.insert(0, shutil.which("az"))
+    
     output = subprocess.run(commands, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout = output.stdout.decode("utf-8")
     stderr = output.stderr.decode("utf-8")
