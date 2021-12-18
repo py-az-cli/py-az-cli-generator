@@ -24,7 +24,7 @@ def _call_az(command: str, parameters: Dict) -> object:
     commands = command.split()
     
     # strip off az and replace it with full path to az to accomodate Windows
-    commands.pop()
+    commands.pop(0)
     commands.insert(0, shutil.which("az"))
 
     # add the params to the commands
