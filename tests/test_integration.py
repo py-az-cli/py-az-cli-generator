@@ -54,3 +54,4 @@ class TestIntegration(unittest.TestCase):
         with self.assertRaises(Exception):
             result = pyaz.group.show(name=Constants.TEST_GROUP_NAME)
             
+

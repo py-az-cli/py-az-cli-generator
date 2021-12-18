@@ -107,7 +107,7 @@ def generate_code(base_dir):
 
             # write the imports to the top of each module
             # f.write("import json, subprocess\n")
-            f.write(f"from {import_dots} pyaz_utils import call_az\n")
+            f.write(f"from {import_dots} pyaz_utils import _call_az\n")
 
             # build list of subcommands and add import statement
             subcommands = commands[command_path]['_subcommands']
@@ -216,7 +216,7 @@ def {command_verb}({arguments_formatted}):
     '''
     {short_summary}
     '''
-    return call_az("az {command.name}", locals())
+    return _call_az("az {command.name}", locals())
 
 """)
                 # no help summary
@@ -224,7 +224,7 @@ def {command_verb}({arguments_formatted}):
                     f.write(
 f"""
 def {command_verb}({arguments_formatted}):
-    return call_az("az {command.name}", locals())
+    return _call_az("az {command.name}", locals())
 
 """)                    
 

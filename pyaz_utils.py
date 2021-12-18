@@ -2,10 +2,11 @@
 Utility functions for the pyaz generated code to use
 """
 import json
+import shutil
 import subprocess
 from typing import Dict
 
-def call_az(command: str, parameters: Dict) -> object:
+def _call_az(command: str, parameters: Dict) -> object:
     """
     Runs an az command (supplied as a string, and parameters as dictionary) 
     Calls az cli via a subprocess
@@ -13,23 +14,35 @@ def call_az(command: str, parameters: Dict) -> object:
     
     Example:
     `
-    call_az("az group create", locals())
+    _call_az("az group create", locals())
     `
     """
+    # format the parameters into a list 
     params = _get_params(parameters)
+
+    # split commands into a list 
     commands = command.split()
+    
+    # strip off az and replace it with full path to az to accomodate Windows
+    commands.pop()
+    commands.insert(0, shutil.which("az"))
+
+    # add the params to the commands
     commands.extend(params)
+
     full_command = " ".join(commands)
     print(f"Executing command: {full_command}")
     output = subprocess.run(commands, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout = output.stdout.decode("utf-8")
     stderr = output.stderr.decode("utf-8")
     if stdout:
-        return json.loads(stdout)
-        print(stdout)
+        try:
+            return json.loads(stdout)
+        except:
+            return stdout
     elif stderr:
         raise Exception(stderr)
-        print(stderr)  
+
     
 
 def _get_cli_name(name: str) -> str:
