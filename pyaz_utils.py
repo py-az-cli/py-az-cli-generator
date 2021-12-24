@@ -2,6 +2,7 @@
 Utility functions for the pyaz generated code to use
 """
 import json
+import logging
 import shutil
 import subprocess
 from typing import Dict
@@ -27,7 +28,7 @@ def _call_az(command: str, parameters: Dict) -> object:
     commands.extend(params)
 
     full_command = " ".join(commands)
-    print(f"Executing command: {full_command}")
+    logging.info(f"Executing command: {full_command}")
     
     # strip off az and replace it with full path to az to accomodate Windows
     commands.pop(0)
@@ -46,9 +47,9 @@ def _call_az(command: str, parameters: Dict) -> object:
 
     
 
-def _get_cli_name(name: str) -> str:
+def _get_cli_param_name(name: str) -> str:
     """
-    converts name back to cli format from pythonic version
+    converts parameter name back to cli format from pythonic version
     - strips trailing underscore from keywords
     - converts remaining underscores to dashes
     - adds leading dashes
@@ -74,9 +75,9 @@ def _get_params(locals: Dict) -> str:
             
             # if value is a boolean then don't append value, just param, used for flags
             if type(locals[param]) == bool:
-                output.append(_get_cli_name(param))
+                output.append(_get_cli_param_name(param))
             else:
-                output.append(_get_cli_name(param))
+                output.append(_get_cli_param_name(param))
                 output.append(locals[param])    
     
     return output
