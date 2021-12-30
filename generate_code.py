@@ -2,6 +2,7 @@
 Module to generate code for az-cli-py
 """
 import os
+import output
 import tooling
 import json
 import keyword
@@ -91,12 +92,27 @@ def generate_code(base_dir):
     for command_path in commands:
         print(f"generating code module for: {command_path}")
         
+        # translate the command back into the az syntax so that we can use it to get help
+        az_command = command_path.split(os.path.sep)
+        az_command.pop(0)
+        az_command = " ".join(az_command)
+
+        # get the help for the module
+        module_summary = None
+        module_help = tooling.get_help(az_command)
+        if module_help:
+            module_summary = module_help.get('short-summary',None)
+
         # get the module path and create it if it doesn't exist
         module_dir = os.path.join(base_dir, command_path)
         os.makedirs(name=module_dir, exist_ok=True)
 
         # create the module __init__ file that will contain the verb functions
         with open(f"{module_dir}/__init__.py", mode="w") as f:
+
+            # add help to the top of the module
+            if module_summary:
+                f.write(f"'''\n{module_summary}\n'''\n")
 
             # get the level of depth for this command based on the path separator
             # add one so that the top-most is level 1
@@ -123,6 +139,8 @@ def generate_code(base_dir):
                 # placeholder list for the output arguments
                 required_args = []
                 optional_args = []
+                required_arg_names = []
+                optional_arg_names = []
 
                 # string to collect the argument help
                 required_arg_help = ""
@@ -140,6 +158,9 @@ def generate_code(base_dir):
                     # get the argument object
                     arg = arguments[argument]
 
+                    # create instance of Argument class
+                    output_arg = Argument()
+
                     # get the options_list which is the options for this argument in the format:
                     # ['--resource-group', '-g']
                     options_list = arg.type.settings.get("options_list",[])
@@ -154,36 +175,38 @@ def generate_code(base_dir):
                         # get the first option from the options list as that is the one we want
                         # the second option is the shorter one
                         # and pythonize the name of the argument
-                        output_arg = pythonize_name(options_list[0])
+                        name = pythonize_name(options_list[0])
 
-                        # get the argument's help text
-                        help = arg.type.settings.get("help","")
+                        if not name.startswith("_") and name not in ["__cmd__","cmd"]:
 
-                        # get the argument's default value
-                        default = arg.type.settings.get("default",None)
+                            output_arg.name = name
 
-                        # get whether the argument is required
-                        required = arg.type.settings.get("required",False)
+                            # get the argument's help text
+                            output_arg.help = arg.type.settings.get("help", None)
 
-                        # append =None to the argument output in case it is not required
-                        if not required:
-                            output_arg = output_arg + "=None"
+                            # get the argument's default value
+                            output_arg.default = arg.type.settings.get("default",None)
 
-                        # strip out private and default cmd arguments which are not applicable
-                        # and add the output arguments to a list
-                        if not output_arg.startswith("_") and output_arg not in ["__cmd__=None","cmd=None"]:
+                            # get whether the argument is required
+                            output_arg.required = arg.type.settings.get("required",False)
 
-                            if required:
+                            if output_arg.required:
+                                required_arg_names.append(output_arg.formatted_name())
                                 required_args.append(output_arg)
                             else:
+                                optional_arg_names.append(output_arg.formatted_name())
                                 optional_args.append(output_arg)
                                 
-                
-                    #help = arg.type.settings.get('help','')
+
+                # sort args by name
+                required_args = sorted(required_args, key=lambda arg:arg.name)
+                optional_args = sorted(optional_args, key=lambda arg:arg.name)
 
                 # build final list of args from sorted required and optional args
-                required_args_formatted =  ", ".join(sorted(required_args))
-                optional_args_formatted = ", ".join(sorted(optional_args))
+                required_args_formatted =  ", ".join(sorted(required_arg_names))
+                optional_args_formatted = ", ".join(sorted(optional_arg_names))
+
+                
 
                 if required_args and optional_args:
                     arguments_formatted = required_args_formatted + ", " + optional_args_formatted
@@ -206,29 +229,67 @@ def generate_code(base_dir):
                 else:
                     short_summary = ''
 
+                function_doc = short_summary
+
+                # combine with arguments
+                #required_args_doc = ""
+                #if len(required_args) > 0:
+                #    for arg in required_args:
+                #        required_args_doc = required_args_doc.
+                if len(required_args) > 0:
+                    required_args_doc = "\n\n    Required Parameters:\n"
+                    required_args_doc += "\n".join([f"    - {arg.name} -- {arg.help}" for arg in required_args])  
+                    function_doc += required_args_doc
+
+                if len(optional_args) > 0:
+                    optional_args_doc = "\n\n    Optional Parameters:\n"
+                    optional_args_doc += "\n".join([f"    - {arg.name} -- {arg.help}" for arg in optional_args])  
+                    function_doc += optional_args_doc                    
+
+
                 # write the command verb's function body using the parts 
                 # to the command's __init__ module
                 # if help summary then include that
-                if len(short_summary) > 0:
-                    f.write(
+                function_def = _get_az_function_def(command.name, command_verb, arguments_formatted, function_doc)
+                f.write(function_def)
+              
+
+def _get_az_function_def(full_command, command_verb, arguments, command_doc):
+    """
+    given a function name, arguments, and doc, 
+    returns a formatted string function def
+    """
+    if command_doc:
+        function_def = \
 f"""
-def {command_verb}({arguments_formatted}):
+def {command_verb}({arguments}):
     '''
-    {short_summary}
+    {command_doc}
     '''
-    return _call_az("az {command.name}", locals())
+    return _call_az("az {full_command}", locals())
 
-""")
-                # no help summary
-                else:
-                    f.write(
+"""
+    else:
+        function_def = \
 f"""
-def {command_verb}({arguments_formatted}):
-    return _call_az("az {command.name}", locals())
+def {command_verb}({arguments}):
+    return _call_az("az {full_command}", locals())
 
-""")                    
+"""
+    return function_def
 
 
+class Argument:
+    name=""
+    help=None
+    required=False
+    default=None
+
+    def formatted_name(self):
+        if self.required:
+            return self.name
+        else:
+            return self.name + "=None"
     
 if __name__=="__main__":
     # get path to the current file's directory
