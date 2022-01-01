@@ -1,8 +1,10 @@
+"""tests for module generate_code"""
 import unittest
 import generate_code
 
 
 class TestUnit(unittest.TestCase):
+    "Unit tests for generate_code"
 
     def test_pythonize_name(self):
         """tests function that converts cli name to pythonic name"""
@@ -19,4 +21,4 @@ class TestUnit(unittest.TestCase):
         cli_name = "--global"
         expected = "global_"
         actual = generate_code.pythonize_name(cli_name)
-        self.assertEqual(expected, actual)        
+        self.assertEqual(expected, actual)

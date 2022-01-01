@@ -1,8 +1,12 @@
+"""Tests for pyaz_utils module"""
 import unittest
 import pyaz_utils
 
 
 class TestUnit(unittest.TestCase):
+    """Unit tests"""
+
+    # pylint: disable=protected-access
 
     def test_call_az(self):
         """tests happy path for _call_az"""
@@ -23,9 +27,17 @@ class TestUnit(unittest.TestCase):
         returns a cli formatted string of the parameters names and values
         note: boolean doesn't have a value
         """
-        params = {"parameter_int":1, "parameter_string":"string", "parameter_bool": True}
-        expected = ["--parameter-int",1,"--parameter-string","string","--parameter-bool"]
+        params = {
+            "parameter_int": 1,
+            "parameter_string": "string",
+            "parameter_bool": True,
+        }
+        expected = [
+            "--parameter-int",
+            1,
+            "--parameter-string",
+            "string",
+            "--parameter-bool",
+        ]
         actual = pyaz_utils._get_params(params)
         self.assertEqual(expected, actual)
-
-
