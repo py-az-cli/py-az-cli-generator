@@ -1,15 +1,15 @@
-"""Tests for pyaz_utils module"""
+"""Tests for pyaz_utils module."""
 import unittest
 import pyaz_utils
 
 
 class TestUnit(unittest.TestCase):
-    """Unit tests"""
+    """Unit tests for pyaz_utils."""
 
     # pylint: disable=protected-access
 
     def test_call_az(self):
-        """tests happy path for _call_az"""
+        """Test happy path for _call_az function with version."""
         parameters = {}
         result = pyaz_utils._call_az("az version", parameters)
         version = result["azure-cli"]
@@ -17,14 +17,15 @@ class TestUnit(unittest.TestCase):
         self.assertEqual(version, "2.31.0")
 
     def test_get_cli_name(self):
-        """tests that parameter name is converted back to cli format"""
+        """Test that parameter name is converted back to cli format."""
         cli_name = pyaz_utils._get_cli_param_name("test_parameter_name_")
         self.assertEqual("--test-parameter-name", cli_name)
 
     def test_get_params(self):
         """
-        tests function that given a dictionary of parameters
-        returns a cli formatted string of the parameters names and values
+        Test function that given a dictionary of parameters.
+
+        Returns a cli formatted string of the parameters names and values
         note: boolean doesn't have a value
         """
         params = {

@@ -1,18 +1,19 @@
-"""Tests for module pyaz"""
+"""Tests for module pyaz."""
 import unittest
 from output import pyaz
 
 
 class Constants:
-    """test constants"""
+    """Constants for use in tests."""
+
     TEST_GROUP_NAME = "pyaz-test-group"
 
 
 class TestIntegration(unittest.TestCase):
-    """Integration tests"""
+    """Integration test class."""
 
     def test_az_version(self):
-        """test for pyaz.version"""
+        """Test for pyaz.version."""
         result = pyaz.version()
         self.assertIsInstance(result, dict)
 
@@ -21,12 +22,12 @@ class TestIntegration(unittest.TestCase):
         self.assertIsNotNone(version)
 
     def test_az_version_negative(self):
-        """test that calling pyaz.version with an argument raises an error"""
+        """Test that calling pyaz.version with an argument raises an error."""
         with self.assertRaises(TypeError):
             pyaz.version("test") # pylint: disable=[too-many-function-args]
 
     def test_az_account_list(self):
-        """test for az account list"""
+        """Test for az account list."""
         result = pyaz.account.list()
         self.assertIsInstance(result, list)
 
@@ -35,7 +36,7 @@ class TestIntegration(unittest.TestCase):
         self.assertIsNotNone(tenant_id)
 
     def test_az_group_create_exists_and_delete(self):
-        """test for az group create, exists and delete"""
+        """Test for az group create, exists and delete."""
         try:
             result = pyaz.group.create(
                 location="eastus", name=Constants.TEST_GROUP_NAME

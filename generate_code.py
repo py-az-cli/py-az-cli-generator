@@ -1,6 +1,5 @@
-"""
-Module to generate code for az-cli-py
-"""
+"""Module to generate code for az-cli-py."""
+
 import os
 import keyword
 import shutil
@@ -8,7 +7,7 @@ import tooling
 
 
 class Constants:
-    """static class for constants"""
+    """Static class for constants."""
 
     COMMAND_ROOT = "pyaz"  # the root name of the command path
     OUTPUT_DIR_NAME = "output"  # the name of the output folder for generating code
@@ -17,7 +16,8 @@ class Constants:
 
 def pythonize_name(name: str) -> str:
     """
-    given a name, makes it pythonic
+    Given a name, makes it pythonic.
+
     - removes leading dashes
     - replaces remaining dashes with underscores
     - checks for keywords and appends a trailing underscore
@@ -30,11 +30,12 @@ def pythonize_name(name: str) -> str:
 
 def get_commands():
     """
-    returns a dictionary with all the az cli commands, keyed by the path to the command
-    inside each dictionary entry is another dictionary of verbs for that command
-    with the command object (from cli core module) being stored in that
-    """
+    Return a dictionary with all the az cli commands.
 
+    The dictionary is keyed by the path to the command
+    inside each dictionary entry is another dictionary of verbs for that command
+    with the command object (from cli core module) being stored in that.
+    """
     # using Microsoft VSCode tooling module to load the az cli command table
     tooling.initialize()
     commands = tooling.load_command_table()
@@ -86,7 +87,9 @@ def get_commands():
 
 def generate_code(base_dir):
     """
-    creates a folder structure starting from the base_dir based on the hierarchy of
+    Generate code for pyaz from the az cli command table
+
+    Create a folder structure starting from the base_dir based on the hierarchy of
     the commands, with a folder for each command containing an __init__ module
     that contains the "verb" functions (if any) associated with that command
     """
@@ -262,10 +265,7 @@ def generate_code(base_dir):
 
 
 def _get_az_function_def(full_command, command_verb, arguments, command_doc):
-    """
-    given a function name, arguments, and doc,
-    returns a formatted string function def
-    """
+    """Given a function name, arguments, and doc,returns a formatted string function def."""
     if command_doc:
         function_def = f"""
 def {command_verb}({arguments}):
@@ -285,14 +285,15 @@ def {command_verb}({arguments}):
 
 
 class Argument:
-    """Represents an argument to a command"""
+    """Represents an argument to a command."""
+
     name = ""
     help = None
     required = False
     default = None
 
     def formatted_name(self):
-        """returns a formatted argument name"""
+        """Return a formatted argument name."""
         if self.required:
             return self.name
         else:

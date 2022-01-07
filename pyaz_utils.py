@@ -1,6 +1,5 @@
-"""
-Utility functions for the pyaz generated code to use
-"""
+"""Utility functions for the pyaz generated code to use."""
+
 import json
 import logging
 import shutil
@@ -10,7 +9,8 @@ from typing import Dict
 
 def _call_az(command: str, parameters: Dict) -> object:
     """
-    Runs an az command (supplied as a string, and parameters as dictionary)
+    Call an az command (supplied as a string, and parameters as dictionary).
+
     Calls az cli via a subprocess
     Returns the az cli json converted to python object
 
@@ -51,10 +51,11 @@ def _call_az(command: str, parameters: Dict) -> object:
 
 def _get_cli_param_name(name: str) -> str:
     """
-    converts parameter name back to cli format from pythonic version
-    - strips trailing underscore from keywords
-    - converts remaining underscores to dashes
-    - adds leading dashes
+    Convert parameter name back to cli format from pythonic version.
+
+    - Strips trailing underscore from keywords
+    - Converts remaining underscores to dashes
+    - Adds leading dashes
     """
     if name[-1] == "_":
         name = name[0:-1]
@@ -65,8 +66,10 @@ def _get_cli_param_name(name: str) -> str:
 
 def _get_params(locals: Dict) -> str:
     """
-    given the built-in locals dictionary returns a formatted string
-    with the az cli formatted parameter names and values in a comma-separated list
+    Given the built-in locals dictionary returns a formatted string of parameters.
+
+    The parameter string contains the az cli formatted parameter names and values
+    in a comma-separated list.
     """
     # return params
     output = []
