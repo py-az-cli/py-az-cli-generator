@@ -52,3 +52,19 @@ class TestIntegration(unittest.TestCase):
         # assert that the group no longer exists by attempted to show it
         with self.assertRaises(Exception):
             result = pyaz.group.show(name=Constants.TEST_GROUP_NAME)
+
+    def test_az_group_with_tags(self):
+        """Test az group create with support for multiple tags."""
+        try:
+            pyaz.group.create(
+                location="eastus",
+                name=Constants.TEST_GROUP_NAME,
+                tags="tag1=value1 tag2='value 2'"
+            )
+            group = pyaz.group.show(name=Constants.TEST_GROUP_NAME)
+            expected = {"tag1":"value1", "tag2": "value 2"}
+            actual = group['tags']
+            self.assertDictEqual(expected, actual)
+
+        finally:
+            pyaz.group.delete(name=Constants.TEST_GROUP_NAME, yes=True, no_wait=True)

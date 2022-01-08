@@ -87,7 +87,7 @@ def get_commands():
 
 def generate_code(base_dir):
     """
-    Generate code for pyaz from the az cli command table
+    Generate code for pyaz from the az cli command table.
 
     Create a folder structure starting from the base_dir based on the hierarchy of
     the commands, with a folder for each command containing an __init__ module
@@ -95,7 +95,7 @@ def generate_code(base_dir):
     """
     commands = get_commands()
 
-    for command_path in commands:
+    for command_path, command_group in commands.items():
         print(f"generating code module for: {command_path}")
 
         # translate the command back into the az syntax so that we can use it to get help
@@ -132,15 +132,15 @@ def generate_code(base_dir):
             file.write(f"from {import_dots} pyaz_utils import _call_az\n")
 
             # build list of subcommands and add import statement
-            subcommands = commands[command_path]["_subcommands"]
+            subcommands = command_group["_subcommands"]
             if len(subcommands) > 0:
                 file.write(f'from . import {", ".join(sorted(subcommands))}\n\n')
 
             # del the subcommands list as it is no longer needed
-            del commands[command_path]["_subcommands"]
+            del command_group["_subcommands"]
 
             # for each command verb write a function with a boiler plate format
-            for command_verb in commands[command_path]:
+            for command_verb, command in command_group.items():
 
                 # placeholder list for the output arguments
                 required_args = []
@@ -149,7 +149,7 @@ def generate_code(base_dir):
                 optional_arg_names = []
 
                 # get the command object from the command table
-                command = commands[command_path][command_verb]
+                #command = commands[command_path][command_verb]
 
                 # get the dictionary of arguments for the command
                 arguments = tooling.get_arguments(command)
@@ -220,12 +220,6 @@ def generate_code(base_dir):
                     arguments_formatted = required_args_formatted
                 else:
                     arguments_formatted = optional_args_formatted
-
-                # TODO: to make this work, modify _get_params method
-                # if len(arguments_formatted) > 0:
-                #    arguments_formatted += ", **kwargs"
-                # else:
-                #    arguments_formatted = "**kwargs"
 
                 # get help for commmand
                 command_help = tooling.get_help(command.name)

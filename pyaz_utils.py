@@ -29,21 +29,25 @@ def _call_az(command: str, parameters: Dict) -> object:
     commands.extend(params)
 
     full_command = " ".join(commands)
-    logging.info(f"Executing command: {full_command}")
+    logging.info("Executing command: %s", full_command)
 
     # strip off az and replace it with full path to az to accomodate Windows
     commands.pop(0)
     commands.insert(0, shutil.which("az"))
 
     output = subprocess.run(
-        commands, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        commands,
+        shell=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
     )
     stdout = output.stdout.decode("utf-8")
     stderr = output.stderr.decode("utf-8")
     if stdout:
         try:
             return json.loads(stdout)
-        except:
+        except: # pylint: disable=bare-except
             return stdout
     elif stderr:
         raise Exception(stderr)
@@ -64,7 +68,7 @@ def _get_cli_param_name(name: str) -> str:
     return name
 
 
-def _get_params(locals: Dict) -> str:
+def _get_params(params: Dict) -> str:
     """
     Given the built-in locals dictionary returns a formatted string of parameters.
 
@@ -76,14 +80,14 @@ def _get_params(locals: Dict) -> str:
 
     # loop through locals and append list of parameters and their values
     # as long as the parameter has a value
-    for param in locals:
-        if locals[param]:
+    for param in params:
+        if params[param]:
 
             # if value is a boolean then don't append value, just param, used for flags
-            if type(locals[param]) == bool:
+            if isinstance(params[param], bool):
                 output.append(_get_cli_param_name(param))
             else:
                 output.append(_get_cli_param_name(param))
-                output.append(locals[param])
+                output.append(params[param])
 
     return output
