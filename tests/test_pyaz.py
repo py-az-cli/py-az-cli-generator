@@ -1,7 +1,12 @@
 """Tests for module pyaz."""
+import logging
+import sys
 import unittest
+
 from output import pyaz
 
+# log to stdout
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 class Constants:
     """Constants for use in tests."""
@@ -59,11 +64,14 @@ class TestIntegration(unittest.TestCase):
             pyaz.group.create(
                 location="eastus",
                 name=Constants.TEST_GROUP_NAME,
-                tags="tag1=value1 tag2='value 2'"
+                tags="tag1=value1 'tag2=value 2'"
             )
             group = pyaz.group.show(name=Constants.TEST_GROUP_NAME)
-            expected = {"tag1":"value1", "tag2": "value 2"}
+            print(group)
+            expected = {"tag1":"value1", "tag2":"value 2"}
             actual = group['tags']
+            print(expected)
+            print(actual)
             self.assertDictEqual(expected, actual)
 
         finally:

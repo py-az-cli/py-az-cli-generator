@@ -2,6 +2,7 @@
 
 import json
 import logging
+import shlex
 import shutil
 import subprocess
 from typing import Dict
@@ -29,7 +30,11 @@ def _call_az(command: str, parameters: Dict) -> object:
     commands.extend(params)
 
     full_command = " ".join(commands)
+    print(full_command)
     logging.info("Executing command: %s", full_command)
+
+    # split full command using shlex rules
+    commands = shlex.split(full_command)
 
     # strip off az and replace it with full path to az to accomodate Windows
     commands.pop(0)
@@ -68,12 +73,11 @@ def _get_cli_param_name(name: str) -> str:
     return name
 
 
-def _get_params(params: Dict) -> str:
+def _get_params(params: Dict) -> list:
     """
-    Given the built-in locals dictionary returns a formatted string of parameters.
+    Given the built-in locals dictionary returns a formatted list of parameters.
 
-    The parameter string contains the az cli formatted parameter names and values
-    in a comma-separated list.
+    The list returned contains the az cli formatted parameter names and values
     """
     # return params
     output = []
