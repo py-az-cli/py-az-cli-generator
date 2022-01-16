@@ -29,15 +29,15 @@ class TestUnit(unittest.TestCase):
         note: boolean doesn't have a value
         """
         params = {
-            "parameter_int": 1,
+            "parameter_int": "1",
             "parameter_string": "string",
             "parameter_bool": True,
         }
         expected = [
             "--parameter-int",
-            1,
+            '"1"',
             "--parameter-string",
-            "string",
+            '"string"',
             "--parameter-bool",
         ]
         actual = pyaz_utils._get_params(params)

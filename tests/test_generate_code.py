@@ -88,7 +88,7 @@ class TestHelpers(unittest.TestCase):
     def test_get_all_az_commands(self):
         """Tests that helper class returns list of az commands"""
 
-        commands = get_list_of_az_commands()
+        commands = get_all_az_commands()
         self.assertIsInstance(commands, list)
         self.assertIn("account", commands)
         self.assertIn("vm", commands)
