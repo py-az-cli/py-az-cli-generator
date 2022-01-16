@@ -67,14 +67,18 @@ def get_commands():
             # add a subcommands list object to store the sub commands for later use
             command_dict[command_path]["_subcommands"] = []
 
-            # if this is a subcommand then add it to the subcommands list of the parent
-            if command_path.count(os.path.sep) > 0:
-                parent = os.path.dirname(command_path)
+        # if this is a subcommand then add it to the subcommands list of the parent
+        if command_path.count(os.path.sep) > 0:
+            parent = os.path.dirname(command_path)
 
-                # add command path to dictionary if not already there
-                if parent not in command_dict:
-                    command_dict[parent] = {}
-                    command_dict[parent]["_subcommands"] = []
+            # add command path to dictionary if not already there
+            if parent not in command_dict:
+                command_dict[parent] = {}
+                command_dict[parent]["_subcommands"] = []
+
+            # add subcommand to subcommands list of parent if it's not already there
+            subcommand = os.path.basename(command_path)
+            if subcommand not in command_dict[parent]["_subcommands"]:
                 command_dict[parent]["_subcommands"].append(
                     os.path.basename(command_path)
                 )
