@@ -44,29 +44,29 @@ class TestIntegration(unittest.TestCase):
         """Test for az group create, exists and delete."""
         try:
             result = pyaz.group.create(
-                location="eastus", name=Constants.TEST_GROUP_NAME
+                location="eastus", name="test_az_group"
             )
-            self.assertEqual(Constants.TEST_GROUP_NAME, result["name"])
+            self.assertEqual("test_az_group", result["name"])
 
             # assert that the group exists
-            self.assertTrue(pyaz.group.exists(name=Constants.TEST_GROUP_NAME))
+            self.assertTrue(pyaz.group.exists(name="test_az_group"))
 
         finally:
-            pyaz.group.delete(name=Constants.TEST_GROUP_NAME, yes=True, no_wait=True)
+            pyaz.group.delete(name="test_az_group", yes=True, no_wait=True)
 
         # assert that the group no longer exists by attempted to show it
         with self.assertRaises(Exception):
-            result = pyaz.group.show(name=Constants.TEST_GROUP_NAME)
+            result = pyaz.group.show(name="test_az_group")
 
     def test_az_group_with_tags(self):
         """Test az group create with support for multiple tags."""
         try:
             pyaz.group.create(
                 location="eastus",
-                name=Constants.TEST_GROUP_NAME,
+                name="test_az_group_with_tags",
                 tags="tag1=value1 'tag2=value 2'"
             )
-            group = pyaz.group.show(name=Constants.TEST_GROUP_NAME)
+            group = pyaz.group.show(name="test_az_group_with_tags")
             print(group)
             expected = {"tag1":"value1", "tag2":"value 2"}
             actual = group['tags']
@@ -75,4 +75,23 @@ class TestIntegration(unittest.TestCase):
             self.assertDictEqual(expected, actual)
 
         finally:
-            pyaz.group.delete(name=Constants.TEST_GROUP_NAME, yes=True, no_wait=True)
+            pyaz.group.delete(name="test_az_group_with_tags", yes=True, no_wait=True)
+
+    def test_az_parameter_with_spaces(self):
+        """Test that az command can handle parameter with spaces in it."""
+        try:
+            pyaz.group.create(
+                location="eastus",
+                name="test_az_parameter_with_spaces"
+            )
+
+            result = pyaz.ts.create(
+                name="test_template",
+                resource_group="test_az_parameter_with_spaces",
+                description="this is a test description"
+            )
+
+            self.assertEqual(result['description'], 'this is a test description')
+
+        finally:
+            pyaz.group.delete(name="test_az_parameter_with_spaces", yes=True, no_wait=True)

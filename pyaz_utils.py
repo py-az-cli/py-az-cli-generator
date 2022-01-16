@@ -30,7 +30,7 @@ def _call_az(command: str, parameters: Dict) -> object:
     commands.extend(params)
 
     full_command = " ".join(commands)
-    print(full_command)
+    print(f"Executing command: {full_command}")
     logging.info("Executing command: %s", full_command)
 
     # split full command using shlex rules
@@ -92,6 +92,15 @@ def _get_params(params: Dict) -> list:
                 output.append(_get_cli_param_name(param))
             else:
                 output.append(_get_cli_param_name(param))
-                output.append(params[param])
+
+                # special case to handle tags, need to apply shlex.split
+                # to handle case where there are multiple tags
+                if param == "tags":
+                    param_values = shlex.split(params[param])
+                    param_values = [f'"{value}"' for value in param_values]
+                    output.extend(param_values)
+                else:
+                    # wrap parameter value in quotes
+                    output.append(f'"{params[param]}"')
 
     return output
