@@ -26,19 +26,20 @@ class TestUnit(unittest.TestCase):
         Test function that given a dictionary of parameters.
 
         Returns a cli formatted string of the parameters names and values
-        note: boolean doesn't have a value
+        note: boolean doesn't have a value and false boolean is removed
         """
         params = {
             "parameter_int": "1",
             "parameter_string": "string",
-            "parameter_bool": True,
+            "parameter_bool_true": True,
+            "parameter_bool_false": False
         }
         expected = [
             "--parameter-int",
             '"1"',
             "--parameter-string",
             '"string"',
-            "--parameter-bool",
+            "--parameter-bool-true",
         ]
         actual = pyaz_utils._get_params(params)
         self.assertEqual(expected, actual)
