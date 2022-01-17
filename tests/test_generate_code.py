@@ -45,7 +45,7 @@ class TestUnit(unittest.TestCase):
         #check that py.group.show command is present
         self.assertEqual(commands['pyaz/group']['show'].name, "group show")
 
-    @unittest.SkipTest("this hasn't been implemented yet")
+    @unittest.skip("this hasn't been implemented yet")
     def test_get_commands_all(self):
         """Test that get_commands returns all the existing az top-level commands."""
         commands = generate_code.get_commands()
@@ -65,7 +65,7 @@ class TestUnit(unittest.TestCase):
         print(actual)
         print("hello")
 
-    @unittest.SkipTest("not implemented yet.")
+    @unittest.skip("not implemented yet.")
     def test_generate_code(self):
         """Test main generate_code function."""
 
