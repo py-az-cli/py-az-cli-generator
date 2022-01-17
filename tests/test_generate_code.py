@@ -1,10 +1,9 @@
 """Tests for module generate_code."""
 import unittest
-import generate_code
 import requests
 import yaml
+import generate_code
 
-from output.pyaz import pyaz_utils
 
 # pylint: disable=protected-access
 
@@ -46,12 +45,12 @@ class TestUnit(unittest.TestCase):
         #check that py.group.show command is present
         self.assertEqual(commands['pyaz/group']['show'].name, "group show")
 
+    @unittest.SkipTest("this hasn't been implemented yet")
     def test_get_commands_all(self):
-        """Test that get_commands returns all the existing az top-level commands"""
+        """Test that get_commands returns all the existing az top-level commands."""
         commands = generate_code.get_commands()
 
         #for command, command_group in commands.items():
-        
         all_commands = get_all_az_commands()
 
         self.assertTrue(False, "Need to finish this test")
@@ -60,13 +59,20 @@ class TestUnit(unittest.TestCase):
 
         #self.assertListEqual(commands, all_commands)
 
-
-
     def test_get_az_function_def(self):
         """Test method that returns function body given arguments."""
         actual = generate_code._get_az_function_def("pyaz version", "version", "", "documentation")
         print(actual)
         print("hello")
+
+    @unittest.SkipTest("not implemented yet.")
+    def test_generate_code(self):
+        """Test main generate_code function."""
+
+        mock_commands = {}
+
+        generate_code.get_commands = lambda : mock_commands
+
 
 
 def get_all_az_commands():
@@ -86,8 +92,7 @@ def get_all_az_commands():
 class TestHelpers(unittest.TestCase):
 
     def test_get_all_az_commands(self):
-        """Tests that helper class returns list of az commands"""
-
+        """Tests that helper class returns list of az commands."""
         commands = get_all_az_commands()
         self.assertIsInstance(commands, list)
         self.assertIn("account", commands)

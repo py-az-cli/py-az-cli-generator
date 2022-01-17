@@ -89,7 +89,7 @@ def _get_params(params: Dict) -> list:
 
             # if value is a boolean and the value is True
             # then don't append value, just param, used for flags
-            if isinstance(params[param], bool) and params[param]==True:
+            if isinstance(params[param], bool) and params[param] is True:
                 output.append(_get_cli_param_name(param))
             else:
                 output.append(_get_cli_param_name(param))
