@@ -27,7 +27,7 @@ def pythonize_name(name: str) -> str:
     if name in keyword.kwlist:
         name = name + "_"
     if name[0] in ['0','1','2','3','4','5','6','7','8','9']:
-        name = "_" + name    
+        name = "_" + name
     return name
 
 

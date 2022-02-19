@@ -25,7 +25,6 @@ class TestUnit(unittest.TestCase):
         """Test that parameter name with leading number is returned back properly."""
         cli_name = pyaz_utils._get_cli_param_name("_404_document")
         self.assertEqual("--404-document", cli_name)
-        
 
     def test_get_params(self):
         """

@@ -25,7 +25,7 @@ class TestUnit(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_pythonize_name_with_leading_number(self):
-        """Test for name that starts with a number, adds an _ to the name"""
+        """Test for name that starts with a number, adds an _ to the name."""
         cli_name = "404-document"
         expected = "_404_document"
         actual = generate_code.pythonize_name(cli_name)
@@ -75,7 +75,6 @@ class TestUnit(unittest.TestCase):
     @unittest.skip("not implemented yet.")
     def test_generate_code(self):
         """Test main generate_code function."""
-
         mock_commands = {}
 
         generate_code.get_commands = lambda : mock_commands
@@ -83,7 +82,7 @@ class TestUnit(unittest.TestCase):
 
 
 def get_all_az_commands():
-    """Helper function that returns list of all the az top level commands in pyaz format"""
+    """Helper function that returns list of all the az top level commands in pyaz format."""
     #get list of commands from github docs
     response = requests.get("https://raw.githubusercontent.com/MicrosoftDocs/azure-docs-cli/main/latest/docs-ref-autogen/service-page/List%20A%20-%20Z.yml")
     docs = yaml.safe_load(response.content)
@@ -97,6 +96,7 @@ def get_all_az_commands():
     return output
 
 class TestHelpers(unittest.TestCase):
+    """Class for test helpers."""
 
     def test_get_all_az_commands(self):
         """Tests that helper class returns list of az commands."""
