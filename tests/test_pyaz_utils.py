@@ -21,6 +21,12 @@ class TestUnit(unittest.TestCase):
         cli_name = pyaz_utils._get_cli_param_name("test_parameter_name_")
         self.assertEqual("--test-parameter-name", cli_name)
 
+    def test_get_cli_name_with_leading_number(self):
+        """Test that parameter name with leading number is returned back properly."""
+        cli_name = pyaz_utils._get_cli_param_name("_404_document")
+        self.assertEqual("--404-document", cli_name)
+        
+
     def test_get_params(self):
         """
         Test function that given a dictionary of parameters.

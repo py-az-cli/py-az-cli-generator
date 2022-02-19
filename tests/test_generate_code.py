@@ -24,6 +24,13 @@ class TestUnit(unittest.TestCase):
         actual = generate_code.pythonize_name(cli_name)
         self.assertEqual(expected, actual)
 
+    def test_pythonize_name_with_leading_number(self):
+        """Test for name that starts with a number, adds an _ to the name"""
+        cli_name = "404-document"
+        expected = "_404_document"
+        actual = generate_code.pythonize_name(cli_name)
+        self.assertEqual(expected, actual)
+
     def test_get_commands(self):
         """Test function that returns dict of dict of commands keyed by the command path."""
         commands = generate_code.get_commands()

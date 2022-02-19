@@ -21,10 +21,13 @@ def pythonize_name(name: str) -> str:
     - removes leading dashes
     - replaces remaining dashes with underscores
     - checks for keywords and appends a trailing underscore
+    - checks for leading numbers and appends a leading underscore
     """
     name = name.replace("--", "").replace("-", "_")
     if name in keyword.kwlist:
         name = name + "_"
+    if name[0] in ['0','1','2','3','4','5','6','7','8','9']:
+        name = "_" + name    
     return name
 
 
