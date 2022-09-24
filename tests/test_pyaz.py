@@ -95,3 +95,14 @@ class TestIntegration(unittest.TestCase):
 
         finally:
             pyaz.group.delete(name="test_az_parameter_with_spaces", yes=True, no_wait=True)
+
+    def test_az_storage_account_exists(self):
+        """Test exists method for storage account."""
+        try:
+            pyaz.group.create("eastus", "test_exists")
+            pyaz.storage.account.create("pyazstoragetestexists", "test_exists")
+            exists = pyaz.storage.account.exists("pyazstoragetestexists")
+
+            self.assertTrue(exists, "Storage account doesn't exist")
+        finally:
+            pyaz.group.delete("test_exists", yes=True, no_wait=True)

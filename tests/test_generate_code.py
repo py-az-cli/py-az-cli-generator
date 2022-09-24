@@ -55,12 +55,12 @@ class TestUnit(unittest.TestCase):
     @unittest.skip("this hasn't been implemented yet")
     def test_get_commands_all(self):
         """Test that get_commands returns all the existing az top-level commands."""
-        commands = generate_code.get_commands()
+        #commands = generate_code.get_commands()
 
         #for command, command_group in commands.items():
-        all_commands = get_all_az_commands()
+        #all_commands = get_all_az_commands()
 
-        self.assertTrue(False, "Need to finish this test")
+        self.assertTrue(1==0, "Need to finish this test")
         #for command in all_commands:
         #   self.assertIn()
 
@@ -82,11 +82,11 @@ class TestUnit(unittest.TestCase):
 
 
 def get_all_az_commands():
-    """Helper function that returns list of all the az top level commands in pyaz format."""
+    """Return list of all the az top level commands in pyaz format."""
     #get list of commands from github docs
-    response = requests.get("https://raw.githubusercontent.com/MicrosoftDocs/azure-docs-cli/main/latest/docs-ref-autogen/service-page/List%20A%20-%20Z.yml")
+    response = requests.get("https://raw.githubusercontent.com/MicrosoftDocs/azure-docs-cli/main/latest/docs-ref-autogen/service-page/List%20A%20-%20Z.yml") # pylint: disable=line-too-long
     docs = yaml.safe_load(response.content)
-    
+
     output = []
     for command in docs['commands']:
         # strip off leading "az_"
