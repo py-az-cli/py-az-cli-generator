@@ -296,12 +296,14 @@ class Argument:
     def formatted_name(self):
         """Return a formatted argument name."""
         if self.required:
-            return self.name
+            name = self.name
         else:
-            return self.name + "=None"
+            name = self.name + "=None"
+        return name
 
 
-if __name__ == "__main__":
+def main():
+    """Generate code in current directory output folder."""
     # get path to the current file's directory
     current_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -317,3 +319,7 @@ if __name__ == "__main__":
         output_dir, Constants.COMMAND_ROOT, Constants.UTILS_FILE_NAME
     )
     shutil.copy(source_file, target_file)
+
+
+if __name__ == "__main__":
+    main()

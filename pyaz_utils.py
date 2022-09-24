@@ -63,7 +63,7 @@ def _get_cli_param_name(name: str) -> str:
     Convert parameter name back to cli format from pythonic version.
 
     - Strips trailing underscore from keywords
-    - Strips leading underscore 
+    - Strips leading underscore
     - Converts remaining underscores to dashes
     - Adds leading dashes
     """
